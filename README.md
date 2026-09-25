@@ -1,10 +1,15 @@
 # Household Ledger — setup guide
 
-A small budget tracker: sign-in screen, shared real-time ledger, running balance.
-It's a static site (`index.html` + `styles.css` + `app.js`) hosted free on GitHub
-Pages, backed by Firebase for login and storage. Nobody can create their own
+A small budget tracker: a separate sign-in page, and a shared real-time ledger
+page with the running balance. It's two static pages —
+`index.html` (login, with `login.js`) and `ledger.html` (the tracker itself,
+with `ledger.js`), sharing one `styles.css` — hosted free on GitHub Pages,
+backed by Firebase for login and storage. Nobody can create their own
 account — you add each of the 2–5 people by hand in the Firebase console, so
 access stays limited to who you choose.
+
+`ledger.html` checks on load whether you're signed in; if not, it redirects
+you straight back to `index.html`. Signing out does the same in reverse.
 
 Total cost: **$0** at this scale (Firebase's free "Spark" plan covers it).
 

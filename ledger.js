@@ -1,69 +1,28 @@
-// ===================== INIT =====================
-// firebaseConfig comes from firebase-config.js (loaded before this file)
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-const loginView = document.getElementById('login-view');
-const appView = document.getElementById('app-view');
-const loginForm = document.getElementById('login-form');
-const loginError = document.getElementById('login-error');
-const loginBtn = document.getElementById('login-btn');
-const logoutBtn = document.getElementById('logout-btn');
 const userChip = document.getElementById('user-chip');
+const logoutBtn = document.getElementById('logout-btn');
 
 let unsubscribeEntries = null;
 let allEntries = [];
 let selectedType = 'expense';
 
-// ===================== AUTH =====================
+// ===================== AUTH GUARD =====================
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    loginView.hidden = true;
-    appView.hidden = false;
     userChip.textContent = user.email;
     startListening();
   } else {
-    loginView.hidden = false;
-    appView.hidden = true;
+    // Not signed in (or just signed out) — send back to the login page.
     if (unsubscribeEntries) { unsubscribeEntries(); unsubscribeEntries = null; }
-    allEntries = [];
-  }
-});
-
-loginForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  loginError.hidden = true;
-  loginBtn.disabled = true;
-  loginBtn.textContent = 'Signing in…';
-
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-
-  try {
-    await auth.signInWithEmailAndPassword(email, password);
-    loginForm.reset();
-  } catch (err) {
-    loginError.textContent = friendlyAuthError(err);
-    loginError.hidden = false;
-  } finally {
-    loginBtn.disabled = false;
-    loginBtn.textContent = 'Sign in';
+    window.location.href = 'index.html';
   }
 });
 
 logoutBtn.addEventListener('click', () => auth.signOut());
-
-function friendlyAuthError(err) {
-  const code = err && err.code;
-  if (code === 'auth/invalid-email') return 'That email address doesn\u2019t look right.';
-  if (code === 'auth/user-not-found' || code === 'auth/wrong-password' || code === 'auth/invalid-credential') {
-    return 'Email or password is incorrect.';
-  }
-  if (code === 'auth/too-many-requests') return 'Too many attempts — wait a moment and try again.';
-  return 'Couldn\u2019t sign in. Please try again.';
-}
 
 // ===================== ENTRIES =====================
 
@@ -118,6 +77,7 @@ entryForm.addEventListener('submit', async (e) => {
     entryDate.valueAsDate = new Date();
     setType('expense');
   } catch (err) {
+    console.error('Add entry failed:', err);
     entryError.textContent = 'Couldn\u2019t save that entry. Check your connection and try again.';
     entryError.hidden = false;
   } finally {
