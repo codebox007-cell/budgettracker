@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Household Ledger</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,500;0,600;1,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ===================== LOGIN VIEW ===================== -->
+<div id="login-view" class="view">
+  <div class="cover">
+    <div class="cover-inner">
+      <p class="cover-eyebrow">Household Ledger</p>
+      <h1 class="cover-title">Keep the books<br>together.</h1>
+      <p class="cover-sub">A shared record of what comes in and what goes out. Sign in with the account you were given.</p>
+
+      <form id="login-form" class="login-form">
+        <label class="field">
+          <span>Email</span>
+          <input type="email" id="login-email" required autocomplete="username" placeholder="you@family.com">
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" id="login-password" required autocomplete="current-password" placeholder="••••••••">
+        </label>
+        <button type="submit" class="btn btn-primary" id="login-btn">Sign in</button>
+        <p class="form-error" id="login-error" hidden></p>
+      </form>
+
+      <p class="cover-note">Access is by invitation only — new accounts aren't created here. Ask whoever set up the ledger to add you in the Firebase console.</p>
+    </div>
+    <div class="cover-ruled" aria-hidden="true"></div>
+  </div>
+</div>
+
+<!-- ===================== APP VIEW ===================== -->
+<div id="app-view" class="view" hidden>
+  <header class="ledger-header">
+    <div class="header-left">
+      <p class="header-eyebrow">Household Ledger</p>
+      <h1 class="header-title">This month's book</h1>
+    </div>
+    <div class="header-right">
+      <span class="user-chip" id="user-chip"></span>
+      <button class="btn btn-ghost" id="logout-btn">Sign out</button>
+    </div>
+  </header>
+
+  <section class="summary-row">
+    <div class="summary-card">
+      <p class="summary-label">Balance</p>
+      <p class="summary-figure" id="sum-balance">0.00</p>
+    </div>
+    <div class="summary-card summary-in">
+      <p class="summary-label">In</p>
+      <p class="summary-figure" id="sum-income">0.00</p>
+    </div>
+    <div class="summary-card summary-out">
+      <p class="summary-label">Out</p>
+      <p class="summary-figure" id="sum-expense">0.00</p>
+    </div>
+  </section>
+
+  <section class="entry-section">
+    <h2 class="section-title">New entry</h2>
+    <form id="entry-form" class="entry-form">
+      <label class="field field-grow">
+        <span>What was it for</span>
+        <input type="text" id="entry-desc" required placeholder="Groceries, rent, salary…">
+      </label>
+      <label class="field field-narrow">
+        <span>Category</span>
+        <select id="entry-category">
+          <option>General</option>
+          <option>Groceries</option>
+          <option>Rent</option>
+          <option>Utilities</option>
+          <option>Transport</option>
+          <option>Health</option>
+          <option>Salary</option>
+          <option>Other income</option>
+          <option>Savings</option>
+        </select>
+      </label>
+      <label class="field field-narrow">
+        <span>Amount</span>
+        <input type="number" id="entry-amount" required min="0" step="0.01" placeholder="0.00">
+      </label>
+      <label class="field field-narrow">
+        <span>Date</span>
+        <input type="date" id="entry-date" required>
+      </label>
+      <div class="field field-type">
+        <span>Type</span>
+        <div class="type-toggle">
+          <button type="button" class="type-btn active" data-type="expense" id="type-expense">Out</button>
+          <button type="button" class="type-btn" data-type="income" id="type-income">In</button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary entry-submit" id="entry-submit">Add to ledger</button>
+    </form>
+    <p class="form-error" id="entry-error" hidden></p>
+  </section>
+
+  <section class="register-section">
+    <div class="register-head">
+      <h2 class="section-title">Register</h2>
+      <select id="filter-category" class="filter-select">
+        <option value="">All categories</option>
+      </select>
+    </div>
+
+    <div class="register" id="register">
+      <div class="register-empty" id="register-empty">No entries yet. Add the first one above.</div>
+      <div class="register-list" id="register-list"></div>
+    </div>
+  </section>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
